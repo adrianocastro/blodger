@@ -1,6 +1,3 @@
-// @TODO: namespace
-var blodger;
-
 $(function(){
 
     var blodger = {
@@ -9,7 +6,8 @@ $(function(){
         socket: io.connect('http://localhost:3000'),
 
         map: null,
-        neighborhoods: [],
+        tours: {},
+        gigs: [],
         markers: [],
         iterator: 0,
 
@@ -23,67 +21,63 @@ $(function(){
             document.body.appendChild(script);
         },
 
-        setGigs: function() {
-            console.log('setGigs()');
-
-            this.neighborhoods = [
-                new google.maps.LatLng(52.511467, 13.447179),
-                new google.maps.LatLng(52.549061, 13.422975),
-                new google.maps.LatLng(52.497622, 13.396110),
-                new google.maps.LatLng(52.517683, 13.394393)
-            ];
-
-            console.log('neighborhoods', this.neighborhoods);
-        },
-
         initializeGoogleMaps: function() {
             console.log('initializeGoogleMaps()');
-            // var sanFrancisco = new google.maps.LatLng(37.7750, 122.4183);
-            var sanFrancisco = new google.maps.LatLng(52.520816, 13.410186);
+            var sanFrancisco = new google.maps.LatLng(37.781415, -122.393015);
 
             var mapOptions = {
                 center: sanFrancisco,
-                zoom: 10,
+                zoom: 6,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
 
             // @TODO: rethink hardcoded self reference
             blodger.map = new google.maps.Map(document.getElementById('gmaps-canvas'), mapOptions);
 
-            blodger.setGigs();
+            blodger.showGigsMarkers();
         },
 
+        showGigsMarkers: function() {
+            console.log('showGigsMarkers()');
 
-        drop: function() {
-            console.log('drop()');
-            var self = this;
-            for (var i = 0; i < this.neighborhoods.length; i++) {
-                // $.proxy(setTimeout((function(){this.addMarker();}).call(this), i * 200), this);
+            // Read from cached data
+            tours = tourCache;
 
-                setTimeout(function() {
-                    self.addMarker();
-                }, i * 200);
+            // Build'em markers
+            this.buildGigMarkers();
 
-                // (function(this) {
-                //     return function (callback) {
-                //         apiConfig.path = queryPath;
-                //         io.fetch(apiConfig, callback);
-                //     }
-                // })(this))
+            // Drop'em like it's hot
+            this.dropMarkers();
+        },
 
-                // setTimeout(function() {
-                //     this.addMarker();
-                // }, i * 200);
+        buildGigMarkers: function() {
+            console.log('buildGigMarkers()');
+            for (var i=0, j=tours.length; i<j; i++) {
+                // console.log('band name:', tours[i].name);
+                if (tours[i].gigs) {
+                    for (var k=0, l=tours[i].gigs.length; k<l; k++) {
+                        if (tours[i].gigs[k].venue) {
+                            this.gigs.push(new google.maps.LatLng(tours[i].gigs[k].geocodeLat, tours[i].gigs[k].geocodeLng));
+                        }
+                    }
+                }
             }
         },
 
-        addMarker: function(context) {
-            console.log('addMarker()');
-            // var that = this;
-            console.log('this', this);
-            // console.log('that', that);
+        dropMarkers: function() {
+            console.log('dropMarkers()');
+            var self = this;
+            for (var i = 0; i < this.gigs.length; i++) {
+                setTimeout(function() {
+                    self.addSingleMarker();
+                }, i * 200);
+            }
+        },
+
+        addSingleMarker: function(context) {
+            console.log('addSingleMarker()');
             this.markers.push(new google.maps.Marker({
-                position: this.neighborhoods[this.iterator],
+                position: this.gigs[this.iterator],
                 map: this.map,
                 draggable: false,
                 animation: google.maps.Animation.DROP

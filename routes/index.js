@@ -20,81 +20,23 @@ var async = require('async'),
 //     savedTerms = null;
 // });
 
-var fetchTourData = function() {
-    var fs = require('fs');
-    var file = __dirname + '/../data/tours.json';
-    var parsedData;
-
-    fs.readFile(file, 'utf8', function (err, data) {
-        if (err) {
-            console.log('Error: ' + err);
-            return;
-        }
-
-        console.log('found data');
-        parsedData = JSON.parse(data);
-        console.log('parsedData', parsedData);
-
-    });
-
-    return parsedData;
-}
-
 var handlePageRequest = function (req, res) {
 
     var tours = require('../data/tours.json');
-    console.log('tours', tours);
 
-    res.render('index', { title: 'Blodger', bands: tours.bands });
+    // If it hits the json endpoint then it's an Ajax request
+    if (req.params.json) {
+        if (req.query.action) {
+            console.log('JSON request for ' + req.query.action + ' action.');
+            res.send({ bands: tours.bands });
+        }
 
-    // // This is a simplified version of handlePageRequest that doesn’t support
-    // // anything other than a fresh page load and subsequent Ajax requests via
-    // // the json endpoint.
+    } else {
+        // If there are no params defined in the request then it's a new page refresh
 
-    // // @TODO: add support for GET/POSTs requests for cases when there is
-    // // no client-side JavaScript to execute the Ajax requests for data.
-
-    // // If it hits the json endpoint then it's an Ajax request
-    // if (req.params.json) {
-    //     // Request to remove a previously selected query
-    //     if (req.query.remove) {
-    //         // Remove item from savedTarms
-    //         delete(savedTerms[req.query.remove]);
-    //         // Clear the invertal if savedTerms is empty
-    //         if (Object.getOwnPropertyNames(savedTerms).length < 1) {
-    //             clearInterval(newTweetChecker);
-    //         }
-    //     }
-
-    //     // If the request defines either GET or POST params it's because we're trying to load new data
-    //     if (req.query.q) {
-    //         // fetch query
-    //         var queryItem = req.query.q.trim();
-    //             terms     = [],
-    //             tweets    = [],
-    //             queue     = [];
-
-    //         // Save the query name under terms to be used to render on the view
-    //         terms.push({'name' : queryItem});
-
-    //         // Fetch tweets
-    //         fetchTweets(queryItem, function sendPayload(tweets) {
-    //             console.log('sendPayload(): tweets', tweets);
-    //             // Send data over to client
-    //             res.send({ tweets: tweets, terms : terms });
-    //             // Create a listener to check for new tweets
-    //             checkForNewTweets();
-    //         });
-
-    //         // Save to the list of saved terms if not a dup
-    //         if (!savedTerms[queryItem]) {
-    //             savedTerms[queryItem] = {}
-    //         }
-    //     }
-    // } else {
-    //     // If there are no params defined in the request then it's a new page refresh
-    //     res.render('index', { title: 'Tweader' });
-    // }
+        var data = JSON.stringify(tours.bands)
+        res.render('index', { title: 'Blodger', bands: tours.bands, data: data });
+    }
 };
 
 var fetchTweets = function (queryItem, cb) {

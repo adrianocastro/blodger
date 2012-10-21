@@ -3,6 +3,7 @@ body {
 }
 .hero-unit {
     padding: 30px;
+    margin: 20px;
 }
 .venue {
     font-weight: bold;

@@ -2,8 +2,6 @@
 
 {<content}
 
-    <h1></h1>
-
     <div class="hero-unit">
         <h1>{title}</h1>
         <p>A simple application that allows music fans to offer lodging to touring bands.</p>
@@ -51,8 +49,11 @@
                 <!-- Google Maps canvas -->
             </div>
         </div>
-</div>
+    </div>
 
+<script>
+var tourCache = {data|s};
+</script>
 <!--
          <form id="topic-search" action="/" method="post">
             <div>

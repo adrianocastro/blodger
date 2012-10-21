@@ -8,7 +8,8 @@
                     "location": "San Francisco, CA",
                     "venue": "The Fillmore",
                     "address": "1805 Geary Boulevard, San Francisco, CA 94115",
-                    "geocode": "37.7841038, -122.4334611",
+                    "geocodeLat": 37.7841038,
+                    "geocodeLng": -122.4334611,
                     "website": "http://www.thefillmore.com/",
                     "date": "2012/11/10"
                 },
@@ -16,7 +17,8 @@
                     "location": "San Luis Obispo, CA",
                     "venue": "Z Club",
                     "address": "2010 Parker St, San Luis Obispo, CA 93401",
-                    "geocode": "35.271851, -120.668713",
+                    "geocodeLat": 35.271851,
+                    "geocodeLng": -120.668713,
                     "website": "http://www.myspace.com/zclubslo",
                     "date": "2012/11/13"
                 }
@@ -31,6 +33,8 @@
                     "location": "Sacramento, CA",
                     "venue": "Ace of Spades",
                     "address": "1417 R St, Sacramento, CA 95811",
+                    "geocodeLat": 38.5699088,
+                    "geocodeLng": -121.4909713,
                     "website": "http://aceofspadessac.com",
                     "date": "2012/10/25"
                 },
@@ -38,6 +42,8 @@
                     "location": "Oakland, CA",
                     "venue": "Paramount Theatre",
                     "address": "2025 Broadway, Oakland, CA 94612",
+                    "geocodeLat": 37.8095778,
+                    "geocodeLng": -122.2681079,
                     "website": "http://www.paramounttheatre.com",
                     "date": "2012/11/05"
                 },
@@ -45,6 +51,8 @@
                     "location": "San Jose, CA",
                     "venue": "The Blank Club",
                     "address": "44 S Almaden Ave, San Jose, CA 95113",
+                    "geocodeLat": 37.3338799,
+                    "geocodeLng": -121.8932706,
                     "website": "http://theblankclub.com",
                     "date": "2012/12/30"
                 }
