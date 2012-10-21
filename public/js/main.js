@@ -63,6 +63,7 @@ $(function(){
                                 'name': band.name,
                                 'venue': gig.venue,
                                 'location': gig.location,
+                                'date': gig.date,
                                 'title': band.name + ': ' + gig.venue + ', ' + gig.location
                             });
                         }
@@ -97,7 +98,7 @@ $(function(){
 
             // Create individual info window
             // @TODO: consider using client-side dust templates instead of mixing markup with JS
-            var infoWindowContent =  '<div class="info-window">'+
+            var infoWindowContent =  '<div class="info-window" data-id="' + gig.name + '-' + gig.date + '">'+
                 '<p class="band">' + gig.name + '</p>'+
                 '<p>' + gig.venue + '</p>'+
                 '<p>' + gig.location + '</p>'+
@@ -130,10 +131,9 @@ $(function(){
     blodger.socket.on('connection-on', function (data) {
         console.log('Socket.io is on. Message from server:', data.status);
     });
-    // socket.on('new-tweets', function (data) {
-    //     console.log('We have new tweets. Message from server:', data.status);
-    //     appendTweetsToFeed(data.tweets);
-    // });
+    blodger.socket.on('offer-made', function (data) {
+        console.log('The server says:', data.status);
+    });
 
     // Expose Google Maps initialisation callback
     window.initializeGoogleMaps = blodger.initializeGoogleMaps;
@@ -149,7 +149,10 @@ $(function(){
 
         if ($(target).hasClass('offer-lodging')) {
             e.preventDefault();
-            console.log('offer button');
+            var gig = $(target).parent(),
+                gigId = gig.attr('data-id');
+            console.log('offer button for ' + gigId);
+            blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: gigId });
         };
     });
 });
