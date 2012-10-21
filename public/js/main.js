@@ -12,6 +12,7 @@ $(function(){
         markers: [],
         infoWindows: [],
         iterator: 0,
+        openInfoWindowIndex: null,
 
         loadGoogleMapsApi: function() {
             console.log('loadGoogleMapsApi()');
@@ -106,8 +107,7 @@ $(function(){
                 '</div>';
 
             this.infoWindows.push(new google.maps.InfoWindow({
-                content: infoWindowContent,
-                maxWidth: 200
+                content: infoWindowContent
             }));
 
             var self = this;
@@ -116,7 +116,14 @@ $(function(){
                 'click',
                 (function(iterator) {
                     return function() {
+                        // Close previously open info windows
+                        if (null !== self.openInfoWindowIndex) {
+                            self.infoWindows[self.openInfoWindowIndex].close();
+                        }
+                        // Open a new info window
                         self.infoWindows[iterator].open(self.map, self.markers[iterator]);
+                        // Save a reference to its index to later close it
+                        self.openInfoWindowIndex = iterator;
                     }
                 }(this.iterator))
             );
