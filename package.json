@@ -1,0 +1,19 @@
+{
+    "author": "Adriano Castro <ad@adrianocastro.net> (http://adrianocastro.net)",
+    "name": "Blodger",
+    "description": "A simple application that allows music fans to offer lodging to touring bands.",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node app"
+    },
+    "dependencies": {
+        "express": "3.0.0rc4",
+        "dustjs-linkedin": "*",
+        "dustjs-helpers": "*",
+        "dustbuster": "*",
+        "klei-dust":"*",
+        "async":"*",
+        "socket.io":"*"
+    }
+}

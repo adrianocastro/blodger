@@ -1,0 +1,13 @@
+body {
+    /*padding: 15px;*/
+}
+.hero-unit {
+    padding: 30px;
+}
+.venue {
+    font-weight: bold;
+}
+#gmaps-canvas {
+    height: 500px;
+    background: #eee;
+}

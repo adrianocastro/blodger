@@ -1,0 +1,66 @@
+{>layout/}
+
+{<content}
+
+    <h1></h1>
+
+    <div class="hero-unit">
+        <h1>{title}</h1>
+        <p>A simple application that allows music fans to offer lodging to touring bands.</p>
+        <p>
+            <a class="btn btn-primary btn-large" href="https://github.com/adrianocastro/blodger">Learn more</a>
+        </p>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span4">
+                <div class="tabbable tabs-left">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#all-bands" data-toggle="tab">All Bands</a></li>
+                        {#bands}
+                        <li><a href="#{id}" data-toggle="tab">{name}
+                            {?gigCount}
+                            {~s}<span class="badge badge-success">{gigCount}</span>
+                            {:else}
+                            {~s}<span class="badge badge-important">0</span>
+                            {/gigCount}
+                        </a></li>
+                        {/bands}
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="all-bands">
+                            <ul>
+                                {>all-bands/}
+                            </ul>
+                        </div>
+
+                        {#bands}
+                        <div class="tab-pane" id="{id}">
+                            <ul>
+                                {>tour-dates/}
+                            </ul>
+                        </div>
+                        {/bands}
+                    </div>
+                </div>
+
+            </div>
+            <div class="span8 gmaps-wrapper" id="gmaps-canvas">
+                <!-- Google Maps canvas -->
+            </div>
+        </div>
+</div>
+
+<!--
+         <form id="topic-search" action="/" method="post">
+            <div>
+                <label for="name">Search</label>
+                <input type="text" name="q" id="q" value="" tabindex="1">
+                <input type="hidden" name="savedTerms" id="savedTerms" value="{#terms}{name},{/terms}">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+ -->
+ {/content}

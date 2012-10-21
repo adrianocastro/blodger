@@ -1,0 +1,4 @@
+{#bands}
+    {>tour-dates/}
+    {<bandName}{name}, {/bandName}
+{/bands}

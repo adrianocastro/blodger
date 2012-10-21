@@ -1,0 +1,5 @@
+{#gigs}
+<li>{+bandName}{/bandName}<a href="{website}"><span class="venue">{venue}</span> – {location}</a></li>
+{:else}
+<li>no scheduled tour dates</li>
+{/gigs}

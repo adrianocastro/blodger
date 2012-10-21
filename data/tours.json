@@ -1,0 +1,59 @@
+{
+    "bands": [
+        {
+            "name": "Burns Unit",
+            "id": "burns_unit",
+            "gigs": [
+                {
+                    "location": "San Francisco, CA",
+                    "venue": "The Fillmore",
+                    "address": "1805 Geary Boulevard, San Francisco, CA 94115",
+                    "geocode": "37.7841038, -122.4334611",
+                    "website": "http://www.thefillmore.com/",
+                    "date": "2012/11/10"
+                },
+                {
+                    "location": "San Luis Obispo, CA",
+                    "venue": "Z Club",
+                    "address": "2010 Parker St, San Luis Obispo, CA 93401",
+                    "geocode": "35.271851, -120.668713",
+                    "website": "http://www.myspace.com/zclubslo",
+                    "date": "2012/11/13"
+                }
+            ],
+            "gigCount": 2
+        },
+        {
+            "name": "CAKE",
+            "id": "cake",
+            "gigs": [
+                {
+                    "location": "Sacramento, CA",
+                    "venue": "Ace of Spades",
+                    "address": "1417 R St, Sacramento, CA 95811",
+                    "website": "http://aceofspadessac.com",
+                    "date": "2012/10/25"
+                },
+                {
+                    "location": "Oakland, CA",
+                    "venue": "Paramount Theatre",
+                    "address": "2025 Broadway, Oakland, CA 94612",
+                    "website": "http://www.paramounttheatre.com",
+                    "date": "2012/11/05"
+                },
+                {
+                    "location": "San Jose, CA",
+                    "venue": "The Blank Club",
+                    "address": "44 S Almaden Ave, San Jose, CA 95113",
+                    "website": "http://theblankclub.com",
+                    "date": "2012/12/30"
+                }
+            ],
+            "gigCount": 3
+        },
+        {
+            "name": "Battles",
+            "id": "battles"
+        }
+    ]
+}
