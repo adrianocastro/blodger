@@ -6,9 +6,11 @@ $(function(){
         socket: io.connect('http://localhost:3000'),
 
         map: null,
-        tours: {},
+        // Read tours from cache
+        tours: tourCache,
         gigs: [],
         markers: [],
+        infoWindows: [],
         iterator: 0,
 
         loadGoogleMapsApi: function() {
@@ -40,9 +42,6 @@ $(function(){
         showGigsMarkers: function() {
             console.log('showGigsMarkers()');
 
-            // Read from cached data
-            tours = tourCache;
-
             // Build'em markers
             this.buildGigMarkers();
 
@@ -52,12 +51,20 @@ $(function(){
 
         buildGigMarkers: function() {
             console.log('buildGigMarkers()');
-            for (var i=0, j=tours.length; i<j; i++) {
+            for (var i=0, j=this.tours.length; i<j; i++) {
+                var band = this.tours[i];
                 // console.log('band name:', tours[i].name);
-                if (tours[i].gigs) {
-                    for (var k=0, l=tours[i].gigs.length; k<l; k++) {
-                        if (tours[i].gigs[k].venue) {
-                            this.gigs.push(new google.maps.LatLng(tours[i].gigs[k].geocodeLat, tours[i].gigs[k].geocodeLng));
+                if (band.gigs) {
+                    for (var k=0, l=band.gigs.length; k<l; k++) {
+                        var gig = band.gigs[k];
+                        if (gig.venue) {
+                            this.gigs.push({
+                                'pos': new google.maps.LatLng(gig.geocodeLat, gig.geocodeLng),
+                                'name': band.name,
+                                'venue': gig.venue,
+                                'location': gig.location,
+                                'title': band.name + ': ' + gig.venue + ', ' + gig.location
+                            });
                         }
                     }
                 }
@@ -66,6 +73,7 @@ $(function(){
 
         dropMarkers: function() {
             console.log('dropMarkers()');
+
             var self = this;
             for (var i = 0; i < this.gigs.length; i++) {
                 setTimeout(function() {
@@ -76,15 +84,43 @@ $(function(){
 
         addSingleMarker: function(context) {
             console.log('addSingleMarker()');
+            var gig = this.gigs[this.iterator];
+
+            // Create individual marker
             this.markers.push(new google.maps.Marker({
-                position: this.gigs[this.iterator],
+                position: gig.pos,
                 map: this.map,
+                title: gig.title,
                 draggable: false,
                 animation: google.maps.Animation.DROP
             }));
+
+            // Create individual info window
+            // @TODO: consider using client-side dust templates instead of mixing markup with JS
+            var infoWindowContent =  '<div class="info-window">'+
+                '<p class="band">' + gig.name + '</p>'+
+                '<p>' + gig.venue + '</p>'+
+                '<p>' + gig.location + '</p>'+
+                '<button class="offer-lodging btn btn-block btn-primary">Offer lodging</button>'+
+                '</div>';
+
+            this.infoWindows.push(new google.maps.InfoWindow({
+                content: infoWindowContent,
+                maxWidth: 200
+            }));
+
+            var self = this;
+            google.maps.event.addListener(
+                this.markers[this.iterator],
+                'click',
+                (function(iterator) {
+                    return function() {
+                        self.infoWindows[iterator].open(self.map, self.markers[iterator]);
+                    }
+                }(this.iterator))
+            );
             this.iterator++;
         }
-
     }
 
 
@@ -103,99 +139,17 @@ $(function(){
     window.initializeGoogleMaps = blodger.initializeGoogleMaps;
     window.blodger = blodger;
 
-    // /**
-    //   *
-    //   * Appends new tweets using the tweader.feed dust template
-    //   *
-    //  **/
-    // var appendTweetsToFeed = function (tweets) {
-    //     var existingFeed = $('#feed').html();
-    //     dust.render('tweader.feed', { tweets : tweets }, function (err, output) {
-    //         $('#feed').html(output + existingFeed);
-    //     });
-    // }
+    /**
+      *
+      * Event delegation for clicks
+      *
+     **/
+    $("body").on("click", function (e){
+        var target = e.target;
 
-    // /**
-    //   *
-    //   * Appends terms to the list of terms using the tweader.terms dust template
-    //   *
-    //  **/
-    // var appendTermsToList = function (terms) {
-    //     var existingTerms = $('#topic-list').html();
-    //     dust.render('tweader.terms', { terms : terms }, function (err, output) {
-    //         $('#topic-list').html(output + existingTerms);
-    //     });
-    // }
-
-    // /**
-    //   *
-    //   * Handle topic search form interactions
-    //   *
-    //  **/
-    // $('#topic-search').submit(function handleTopicSearch(e) {
-    //     // Prevent the form submit
-    //     e.preventDefault();
-    //     // Temporarily disable the submit button until the ajax call is complete
-    //     var submitButton = $('input[type=submit]', this),
-    //         query        = $('#q', this),
-    //         savedTerms   = $('#savedTerms', this);
-
-    //     // @TODO: validate for duplicate queries in addition to empty string validation.
-    //     if ($.trim(query.val()) !== '') {
-    //         submitButton.attr('disabled', 'disabled');
-
-    //         $.ajax({
-    //             url: "/.json",
-    //             data: $(this).serialize(),
-    //             success: function(data) {
-    //                 console.log('Query results:', data);
-
-    //                 // Append tweets and terms to feed and list respectively
-    //                 appendTweetsToFeed(data.tweets);
-    //                 appendTermsToList(data.terms);
-
-    //                 // Append to the list of saved terms
-    //                 var savedTermsVal = savedTerms.val(),
-    //                     queryVal      = query.val() + ',';
-
-    //                 savedTerms.val((savedTermsVal === '') ? queryVal : savedTermsVal + queryVal);
-    //             }
-    //         }).done(function() {
-    //             // Re-enable the submit button and clear the old query
-    //             submitButton.removeAttr('disabled');
-    //             query.val('');
-    //         });
-    //     } else {
-    //         alert('Please enter a non-empty query.\n\nYou can search for a hashtag (e.g. #weekend), an @ reference (e.g. @adrianocastro) or any string (e.g. "San Francisco").');
-    //     }
-    // });
-
-    // /**
-    //   *
-    //   * Handle topic removing
-    //   *
-    //  **/
-    // $("#topic-list").on("click", ".topic-remove", function handleTopicRemove(e){
-    //     // Prevent for submit
-    //     e.preventDefault();
-
-    //     var topic       = $(this).parent(),
-    //         topicId     = topic.attr('data-id'),
-    //         topicTweets = $('#feed').find("[data-id='" + topicId + "']"),
-    //         savedTopics = $('#savedTerms');
-
-    //     // remove all tweets for topic from the feed
-    //     topicTweets.remove();
-    //     // remove topic itself from topic list
-    //     topic.remove();
-    //     // and remove topic from list of saved topics
-    //     savedTopics.val(savedTopics.val().replace(topicId + ',', ''));
-
-    //     $.ajax({
-    //         url: "/.json",
-    //         data: { remove: topicId }
-    //     }).done(function() {
-    //         console.log('savedTerms object updated');
-    //     });
-    // });
+        if ($(target).hasClass('offer-lodging')) {
+            e.preventDefault();
+            console.log('offer button');
+        };
+    });
 });

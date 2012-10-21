@@ -55,3 +55,6 @@ Eventually:
     - https://github.com/caolan/async
 - Twitter Bootstrap
     - http://twitter.github.com/bootstrap/
+- Google Maps API
+    - https://developers.google.com/maps/documentation/javascript/
+    - Geocoding: https://developers.google.com/maps/documentation/geocoding/

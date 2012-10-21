@@ -12,3 +12,12 @@ body {
     height: 500px;
     background: #eee;
 }
+.info-window p {
+    margin: 0;
+}
+.info-window .band {
+    font-weight: bold;
+}
+.info-window button {
+    margin-top: 5px;
+}

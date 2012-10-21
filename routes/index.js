@@ -33,7 +33,6 @@ var handlePageRequest = function (req, res) {
 
     } else {
         // If there are no params defined in the request then it's a new page refresh
-
         var data = JSON.stringify(tours.bands)
         res.render('index', { title: 'Blodger', bands: tours.bands, data: data });
     }
