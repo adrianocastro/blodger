@@ -97,7 +97,7 @@ $(function(){
                                 'pos': new google.maps.LatLng(gig.geocodeLat, gig.geocodeLng),
                                 'name': band.name,
                                 'id': band.id,
-                                // 'gigId': band.id,
+                                'gigId': band.id + '-' + gig.date,
                                 'venue': gig.venue,
                                 'location': gig.location,
                                 'date': gig.date,
@@ -130,6 +130,7 @@ $(function(){
                 map: this.map,
                 title: gig.title,
                 bandId: gig.id,
+                gigId: gig.gigId,
                 draggable: false,
                 icon: this.pingImage['available'],
                 shadow: this.pinShadow,
@@ -138,7 +139,7 @@ $(function(){
 
             // Create individual info window
             // @TODO: consider using client-side dust templates instead of mixing markup with JS
-            var infoWindowContent =  '<div class="info-window" data-title="' + gig.title + '" data-id="' + gig.name + '-' + gig.date + '">'+
+            var infoWindowContent =  '<div class="info-window" data-title="' + gig.title + '" data-id="' + gig.gigId + '" data-markerid="' + this.iterator + '">'+
                 '<p class="band">' + gig.name + '</p>'+
                 '<p>' + gig.venue + '</p>'+
                 '<p>' + gig.location + '</p>'+
@@ -187,23 +188,9 @@ $(function(){
             };
         },
 
-        updateMarker: function(gigId) {
-            console.log('updateMarker(' + gigId + ')');
-            console.log(this.markers);
-            // Close any open info windows
-            // if (null !== this.openInfoWindowIndex) {
-            //     this.infoWindows[this.openInfoWindowIndex].close();
-            // }
-
-            // // Go through markers and hide/show according to filter
-            // for (var i = this.markers.length - 1; i >= 0; i--) {
-            //     // Hide markers for bands that don't match the current filter
-            //     if (bandId !== 'all-bands' && this.markers[i].bandId !== bandId) {
-            //         this.markers[i].setVisible(false);
-            //     } else {
-            //         this.markers[i].setVisible(true);
-            //     }
-            // };
+        updateMarker: function(markerId, gigId) {
+            console.log('updateMarker(' + markerId + ', ' + gigId + ')');
+            this.markers[markerId].setIcon(this.pingImage['offered']);
         }
     }
 
@@ -235,9 +222,12 @@ $(function(){
             e.preventDefault();
             var gig      = $(target).parent(),
                 gigId    = gig.attr('data-id');
+                markerId = gig.attr('data-markerid');
                 gigTitle = gig.attr('data-title');
 
-            blodger.updateMarker(gigId);
+            $(target).attr('disabled', 'disabled').addClass('disabled offered').text('Lodging offered');
+
+            blodger.updateMarker(markerId, gigId);
             blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: { 'title': gigTitle, 'id': gigId} });
         };
 

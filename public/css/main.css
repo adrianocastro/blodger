@@ -28,3 +28,7 @@ body {
 .info-window button {
     margin-top: 5px;
 }
+
+.info-window .offered {
+    background-color: #5bb75b;
+}

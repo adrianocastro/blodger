@@ -11,7 +11,7 @@
                     "geocodeLat": 37.7841038,
                     "geocodeLng": -122.4334611,
                     "website": "http://www.thefillmore.com/",
-                    "date": "2012/11/10"
+                    "date": "2012.11.10"
                 },
                 {
                     "location": "San Luis Obispo, CA",
@@ -20,7 +20,7 @@
                     "geocodeLat": 35.271851,
                     "geocodeLng": -120.668713,
                     "website": "http://www.myspace.com/zclubslo",
-                    "date": "2012/11/13"
+                    "date": "2012.11.13"
                 }
             ],
             "gigCount": 2
@@ -36,7 +36,7 @@
                     "geocodeLat": 38.5699088,
                     "geocodeLng": -121.4909713,
                     "website": "http://aceofspadessac.com",
-                    "date": "2012/10/25"
+                    "date": "2012.10.25"
                 },
                 {
                     "location": "Oakland, CA",
@@ -45,7 +45,7 @@
                     "geocodeLat": 37.8095778,
                     "geocodeLng": -122.2681079,
                     "website": "http://www.paramounttheatre.com",
-                    "date": "2012/11/05"
+                    "date": "2012.11.05"
                 },
                 {
                     "location": "San Jose, CA",
@@ -54,7 +54,7 @@
                     "geocodeLat": 37.3338799,
                     "geocodeLng": -121.8932706,
                     "website": "http://theblankclub.com",
-                    "date": "2012/12/30"
+                    "date": "2012.12.30"
                 }
             ],
             "gigCount": 3
