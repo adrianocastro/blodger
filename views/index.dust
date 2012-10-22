@@ -48,20 +48,14 @@
             <div class="span8 gmaps-wrapper" id="gmaps-canvas">
                 <!-- Google Maps canvas -->
             </div>
+            <div class="alerts">
+                <!-- Announcements holder -->
+            </div>
         </div>
     </div>
 
 <script>
+// Cached version of tour data used to build markers and info windows on the map{~n}
 var tourCache = {data|s};
 </script>
-<!--
-         <form id="topic-search" action="/" method="post">
-            <div>
-                <label for="name">Search</label>
-                <input type="text" name="q" id="q" value="" tabindex="1">
-                <input type="hidden" name="savedTerms" id="savedTerms" value="{#terms}{name},{/terms}">
-                <input type="submit" value="Submit">
-            </div>
-        </form>
- -->
  {/content}

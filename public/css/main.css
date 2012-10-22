@@ -5,6 +5,13 @@ body {
     padding: 30px;
     margin: 20px;
 }
+.alerts {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    height: 200px;
+    overflow: auto;
+}
 .venue {
     font-weight: bold;
 }

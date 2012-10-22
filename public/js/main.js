@@ -65,7 +65,7 @@ $(function(){
                                 'venue': gig.venue,
                                 'location': gig.location,
                                 'date': gig.date,
-                                'title': band.name + ': ' + gig.venue + ', ' + gig.location
+                                'title': band.name + ' @ ' + gig.venue + ', ' + gig.location
                             });
                         }
                     }
@@ -99,11 +99,11 @@ $(function(){
 
             // Create individual info window
             // @TODO: consider using client-side dust templates instead of mixing markup with JS
-            var infoWindowContent =  '<div class="info-window" data-id="' + gig.name + '-' + gig.date + '">'+
+            var infoWindowContent =  '<div class="info-window" data-title="' + gig.title + '" data-id="' + gig.name + '-' + gig.date + '">'+
                 '<p class="band">' + gig.name + '</p>'+
                 '<p>' + gig.venue + '</p>'+
                 '<p>' + gig.location + '</p>'+
-                '<button class="offer-lodging btn btn-block btn-primary">Offer lodging</button>'+
+                '<button type="button" class="offer-lodging btn btn-block btn-primary">Offer lodging</button>'+
                 '</div>';
 
             this.infoWindows.push(new google.maps.InfoWindow({
@@ -135,11 +135,17 @@ $(function(){
     // Asynchronously load the Google Maps API script
     blodger.loadGoogleMapsApi();
 
+    // Set up socket.io events
     blodger.socket.on('connection-on', function (data) {
         console.log('Socket.io is on. Message from server:', data.status);
     });
     blodger.socket.on('offer-made', function (data) {
         console.log('The server says:', data.status);
+        var alertMessage = '<div class="alert alert-error">' +
+            '<button type="button" class="close" data-dismiss="alert">×</button>' +
+            '<strong>Attention!</strong> An offer has been made on ' + data.gig.title +
+            '</div>';
+        $('.alerts').html(alertMessage + $('.alerts').html() );
     });
 
     // Expose Google Maps initialisation callback
@@ -158,8 +164,9 @@ $(function(){
             e.preventDefault();
             var gig = $(target).parent(),
                 gigId = gig.attr('data-id');
-            console.log('offer button for ' + gigId);
-            blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: gigId });
+                gigTitle = gig.attr('data-title');
+
+            blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: { 'title': gigTitle, 'id': gigId} });
         };
     });
 });
