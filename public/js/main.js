@@ -190,16 +190,40 @@ $(function(){
 
         updateMarker: function(markerId, gigId) {
             console.log('updateMarker(' + markerId + ', ' + gigId + ')');
-            this.markers[markerId].setIcon(this.pingImage['offered']);
+            // If updateMarker is called with markerId then it's
+            // an active client making a lodging offer
+            if (markerId) {
+                this.markers[markerId].setIcon(this.pingImage['offered']);
+            } else {
+                // Otherwise it's being called as a consequence of an 'offer-made'
+                // event and we mark it as taken
+
+                // Go through markers and hide/show according to filter
+                for (var i = this.markers.length - 1; i >= 0; i--) {
+                    // Hide markers for bands that don't match the current filter
+                    if (this.markers[i].gigId === gigId) {
+                        this.markers[i].setIcon(this.pingImage['taken']);
+                    }
+                };
+            }
         }
     }
 
+
+    //
+    // Google Maps API
+    //
+
     // Expose Google Maps initialisation callback
     window.initializeGoogleMaps = blodger.initializeGoogleMaps;
-    // window.blodger = blodger;
 
     // Asynchronously load the Google Maps API script
     blodger.loadGoogleMapsApi();
+
+
+    //
+    // Socket.io
+    //
 
     // Set up socket.io events
     blodger.socket.on('connection-on', function (data) {
@@ -207,6 +231,12 @@ $(function(){
     });
     blodger.socket.on('offer-made', function (data) {
         console.log('The server says:', data.status);
+
+        console.log('Offer made for ' + data.gig.title + '(' + data.gig.id + ')');
+
+        blodger.updateMarker(null, data.gig.id);
+
+        // @TODO: consider using client-side dust templates instead of mixing markup with JS
         var alertMessage = '<div class="alert">' +
             '<button type="button" class="close" data-dismiss="alert">×</button>' +
             '<strong>Attention!</strong> An offer has been made on ' + data.gig.title +
@@ -214,10 +244,16 @@ $(function(){
         $('.alerts').html(alertMessage + $('.alerts').html() );
     });
 
+
+    //
+    // Events
+    //
+
     // Event delegation for clicks
     $("body").on("click", function (e){
         var target = e.target;
 
+        // Handle lodging offers
         if ($(target).hasClass('offer-lodging')) {
             e.preventDefault();
             var gig      = $(target).parent(),
@@ -225,12 +261,15 @@ $(function(){
                 markerId = gig.attr('data-markerid');
                 gigTitle = gig.attr('data-title');
 
+            // Update the look of the button and the marker
             $(target).attr('disabled', 'disabled').addClass('disabled offered').text('Lodging offered');
+            blodger.updateMarker(markerId, null);
 
-            blodger.updateMarker(markerId, gigId);
+            // Emit a 'client-offer' event
             blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: { 'title': gigTitle, 'id': gigId} });
         };
 
+        // Handle band filtering
         if ($(target).hasClass('band-filter') || $(target).parent().hasClass('band-filter')) {
             var bandId = $(target).attr('data-id') || $(target).parent().attr('data-id');
             blodger.filterMarkers(bandId);
