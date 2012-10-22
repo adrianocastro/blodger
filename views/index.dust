@@ -16,9 +16,9 @@
             <div class="span4">
                 <div class="tabbable tabs-left">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#all-bands" data-toggle="tab">All Bands</a></li>
+                        <li class="active"><a href="#all-bands" class="band-filter" data-toggle="tab" data-id="all-bands">All Bands</a></li>
                         {#bands}
-                        <li><a href="#{id}" data-toggle="tab">{name}
+                        <li><a href="#{id}" class="band-filter" data-toggle="tab" data-id="{id}">{name}
                             {?gigCount}
                             {~s}<span class="badge badge-success">{gigCount}</span>
                             {:else}

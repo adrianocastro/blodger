@@ -54,7 +54,6 @@ $(function(){
             console.log('buildGigMarkers()');
             for (var i=0, j=this.tours.length; i<j; i++) {
                 var band = this.tours[i];
-                // console.log('band name:', tours[i].name);
                 if (band.gigs) {
                     for (var k=0, l=band.gigs.length; k<l; k++) {
                         var gig = band.gigs[k];
@@ -62,6 +61,7 @@ $(function(){
                             this.gigs.push({
                                 'pos': new google.maps.LatLng(gig.geocodeLat, gig.geocodeLng),
                                 'name': band.name,
+                                'id': band.id,
                                 'venue': gig.venue,
                                 'location': gig.location,
                                 'date': gig.date,
@@ -84,7 +84,7 @@ $(function(){
             }
         },
 
-        addSingleMarker: function(context) {
+        addSingleMarker: function() {
             console.log('addSingleMarker()');
             var gig = this.gigs[this.iterator];
 
@@ -93,6 +93,7 @@ $(function(){
                 position: gig.pos,
                 map: this.map,
                 title: gig.title,
+                bandId: gig.id,
                 draggable: false,
                 animation: google.maps.Animation.DROP
             }));
@@ -128,6 +129,24 @@ $(function(){
                 }(this.iterator))
             );
             this.iterator++;
+        },
+
+        filterMarkers: function(bandId) {
+            console.log('filterMarkers(' + bandId + ')');
+            // Close any open info windows
+            if (null !== this.openInfoWindowIndex) {
+                this.infoWindows[this.openInfoWindowIndex].close();
+            }
+
+            // Go through markers and hide/show according to filter
+            for (var i = this.markers.length - 1; i >= 0; i--) {
+                // Hide markers for bands that don't match the current filter
+                if (bandId !== 'all-bands' && this.markers[i].bandId !== bandId) {
+                    this.markers[i].setVisible(false);
+                } else {
+                    this.markers[i].setVisible(true);
+                }
+            };
         }
     }
 
@@ -168,5 +187,11 @@ $(function(){
 
             blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: { 'title': gigTitle, 'id': gigId} });
         };
+
+        if ($(target).hasClass('band-filter') || $(target).parent().hasClass('band-filter')) {
+            var bandId = $(target).attr('data-id') || $(target).parent().attr('data-id');
+            blodger.filterMarkers(bandId);
+        }
+
     });
 });
