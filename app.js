@@ -39,15 +39,6 @@ app.get('/', routes.index);
 app.post('/', routes.index);
 app.get('/.:json?', routes.index);
 
-// @TODO: might not need this. Consider removing.
-// Setup dustbuster to compile views to be usable on the client
-var dustbuster = require('dustbuster');
-dustbuster({
-    input: __dirname + '/views',
-    basename : 'blodger',
-    output: __dirname + '/public/js/dust.templates.js'
-});
-
 // Create a server instance and start listening
 var server = http.createServer(app);
 
