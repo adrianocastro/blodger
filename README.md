@@ -27,12 +27,7 @@ My original approach (please refer to the first commits against this repository)
 
 ## TODO
 
-Today:
-    - integrate Google Maps
-
-Tomorrow:
-    - implement lodging offer
-    - implement real-time publishing of lodging offer events
+- change display of gigs with lodging offers
 
 Eventually:
     - use sessions to support multiple users

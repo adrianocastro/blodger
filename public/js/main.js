@@ -13,6 +13,9 @@ $(function(){
         infoWindows: [],
         iterator: 0,
         openInfoWindowIndex: null,
+        pinColor: '',
+        pinShadow: null,
+        pingImage: {},
 
         loadGoogleMapsApi: function() {
             console.log('loadGoogleMapsApi()');
@@ -37,7 +40,39 @@ $(function(){
             // @TODO: rethink hardcoded self reference
             blodger.map = new google.maps.Map(document.getElementById('gmaps-canvas'), mapOptions);
 
+            blodger.createCustomPinMarkers();
+
             blodger.showGigsMarkers();
+        },
+
+        createCustomPinMarkers: function() {
+            this.pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+                             new google.maps.Size(40, 37),
+                             new google.maps.Point(0, 0),
+                             new google.maps.Point(12, 35));
+
+            var pinColors = [
+                {
+                    'name' : 'available',
+                    'color' : '49afcd'
+                },
+                {
+                    'name' : 'offered',
+                    'color' : '5bb75b'
+                },
+                {
+                    'name' : 'taken',
+                    'color' : 'faa732'
+                },
+            ]
+
+            for (var i = pinColors.length - 1; i >= 0; i--) {
+                this.pingImage[pinColors[i].name]  = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColors[i].color,
+                                 new google.maps.Size(21, 34),
+                                 new google.maps.Point(0,0),
+                                 new google.maps.Point(10, 34));
+
+            };
         },
 
         showGigsMarkers: function() {
@@ -62,6 +97,7 @@ $(function(){
                                 'pos': new google.maps.LatLng(gig.geocodeLat, gig.geocodeLng),
                                 'name': band.name,
                                 'id': band.id,
+                                // 'gigId': band.id,
                                 'venue': gig.venue,
                                 'location': gig.location,
                                 'date': gig.date,
@@ -95,6 +131,8 @@ $(function(){
                 title: gig.title,
                 bandId: gig.id,
                 draggable: false,
+                icon: this.pingImage['available'],
+                shadow: this.pinShadow,
                 animation: google.maps.Animation.DROP
             }));
 
@@ -147,9 +185,31 @@ $(function(){
                     this.markers[i].setVisible(true);
                 }
             };
+        },
+
+        updateMarker: function(gigId) {
+            console.log('updateMarker(' + gigId + ')');
+            console.log(this.markers);
+            // Close any open info windows
+            // if (null !== this.openInfoWindowIndex) {
+            //     this.infoWindows[this.openInfoWindowIndex].close();
+            // }
+
+            // // Go through markers and hide/show according to filter
+            // for (var i = this.markers.length - 1; i >= 0; i--) {
+            //     // Hide markers for bands that don't match the current filter
+            //     if (bandId !== 'all-bands' && this.markers[i].bandId !== bandId) {
+            //         this.markers[i].setVisible(false);
+            //     } else {
+            //         this.markers[i].setVisible(true);
+            //     }
+            // };
         }
     }
 
+    // Expose Google Maps initialisation callback
+    window.initializeGoogleMaps = blodger.initializeGoogleMaps;
+    // window.blodger = blodger;
 
     // Asynchronously load the Google Maps API script
     blodger.loadGoogleMapsApi();
@@ -160,31 +220,24 @@ $(function(){
     });
     blodger.socket.on('offer-made', function (data) {
         console.log('The server says:', data.status);
-        var alertMessage = '<div class="alert alert-error">' +
+        var alertMessage = '<div class="alert">' +
             '<button type="button" class="close" data-dismiss="alert">×</button>' +
             '<strong>Attention!</strong> An offer has been made on ' + data.gig.title +
             '</div>';
         $('.alerts').html(alertMessage + $('.alerts').html() );
     });
 
-    // Expose Google Maps initialisation callback
-    window.initializeGoogleMaps = blodger.initializeGoogleMaps;
-    window.blodger = blodger;
-
-    /**
-      *
-      * Event delegation for clicks
-      *
-     **/
+    // Event delegation for clicks
     $("body").on("click", function (e){
         var target = e.target;
 
         if ($(target).hasClass('offer-lodging')) {
             e.preventDefault();
-            var gig = $(target).parent(),
-                gigId = gig.attr('data-id');
+            var gig      = $(target).parent(),
+                gigId    = gig.attr('data-id');
                 gigTitle = gig.attr('data-title');
 
+            blodger.updateMarker(gigId);
             blodger.socket.emit('client-offer', { status: 'An offer has been made', gig: { 'title': gigTitle, 'id': gigId} });
         };
 
