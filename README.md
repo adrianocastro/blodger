@@ -21,7 +21,7 @@ This app runs on node.js using Express and the dust templating engine. For the r
 
 This app runs on Express on top of node.js. It uses the [dust templating engine](http://linkedin.github.com/dustjs). For real-time communication it uses [Socket.io](http://socket.io/). For layout and simple behaviour it uses [Twitter Bootstrap](http://twitter.github.com/bootstrap/) which allowed for some faster development though the quality of the code (in terms of semantics, performance and maintainability) might have suffered. Results are displayed on Google Maps using the [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/).
 
-I recycled a similar approach to the one used in [tweader](https://github.com/adrianocastro/tweader) in relation to the approach to real-time communication using Socket.io. Given more time I would also have relied on compiled dust templates instead of building markup directly on client-side JavaScript.
+I recycled a similar approach to the one used in [tweader](https://github.com/adrianocastro/tweader) with regards to real-time communication using Socket.io. Given more time I would also have relied on compiled dust templates instead of building markup directly on client-side JavaScript.
 
 ## TODO
 
