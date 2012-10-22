@@ -19,21 +19,16 @@ This app runs on node.js using Express and the dust templating engine. For the r
 
 ## Notes
 
-This app runs on Express on top of node.js. It uses the [dust templating engine](http://linkedin.github.com/dustjs) and shares the templates on the client via [dustbuster](https://github.com/diffsky/dustbuster/). For real-time communication it uses [Socket.io](http://socket.io/). Additionally, [Async](https://github.com/caolan/async) is used as a helper utility.
+This app runs on Express on top of node.js. It uses the [dust templating engine](http://linkedin.github.com/dustjs). For real-time communication it uses [Socket.io](http://socket.io/). For layout and simple behaviour it uses [Twitter Bootstrap](http://twitter.github.com/bootstrap/) which allowed for some faster development though the quality of the code (in terms of semantics, performance and maintainability) might have suffered. Results are displayed on Google Maps using the [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/).
 
-Most of the time spent on building this was around familiarising myself with Socket.io and learning how to best integrate it with Express. Figuring out the best way to share templates between the server and the client was also a key concern and, after some investigating, I chose to go with dust/dustbuster. Lastly, understanding the ins and outs of the Twitter API was also necessary for making this work.
-
-My original approach (please refer to the first commits against this repository) was aiming to have an app that worked fully without any client side JavaScript and then building on top of that. Though I managed to get this working (without real-time, obviously), keeping the original approach started to take too much time as I built up the full rich, one-page interaction. It should be perfectly doable and the app has mostly all it needs for it to happen but it needed more time and I was trying to get to a point where it fit a minimum set of requirements from the brief.
+I recycled a similar approach to the one used in [tweader](https://github.com/adrianocastro/tweader) in relation to the approach to real-time communication using Socket.io. Given more time I would also have relied on compiled dust templates instead of building markup directly on client-side JavaScript.
 
 ## TODO
 
-- change display of gigs with lodging offers
-
-Eventually:
-    - use sessions to support multiple users
-    - better error handling
-    - handle user disconnect by cleaning up after he’s left the building
-    - better namespacing
+- Disable the ability to make offers on gigs already under offer
+- Better error handling
+- Handle user disconnect by cleaning up after he’s left the building
+- Use sessions to support multiple users
 
 ## References
 
@@ -51,5 +46,5 @@ Eventually:
 - Twitter Bootstrap
     - http://twitter.github.com/bootstrap/
 - Google Maps API
-    - https://developers.google.com/maps/documentation/javascript/
+    - Google Maps JavaScript API v3: https://developers.google.com/maps/documentation/javascript/
     - Geocoding: https://developers.google.com/maps/documentation/geocoding/
